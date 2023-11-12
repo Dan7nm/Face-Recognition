@@ -38,20 +38,15 @@ while True:
         print("Can't receive frame (stream end?). Exiting ...")
         break
 
-    # Convert the frame to grayscale for face detection
-    gray = cv.cvtColor(frame,cv.COLOR_BGR2GRAY)
-    # gray = cv.resize(gray,(0, 0), fx=0.25, fy=0.25)
-
-    # Face detecion using the built in haar cascade
-    haar_cascade = cv.CascadeClassifier('haar_face.xml')
-
-    faces = haar_cascade.detectMultiScale(gray,scaleFactor=1.1,minNeighbors=5)
+    # Resize Image for faster face detection
+    resized_frame = cv.resize(frame,(0, 0), fx=0.25, fy=0.25)
     
-    # faces = fc.face_locations(gray)
+    # Aquire all faces locations 
+    faces = fc.face_locations(resized_frame)
     
     # Draw a rectangle around the detected face
-    for (x,y,w,h) in faces:
-        cv.rectangle(frame,(x,y),(x+w,y+h),GREEN,thickness=RECTANGLE_THICKNESS)
+    for (top,right,bottom,left) in faces:
+        cv.rectangle(frame,(left*4,top*4),(right*4,bottom*4),GREEN,thickness=RECTANGLE_THICKNESS)
 
     # Show the current frame omn the display
     cv.imshow('Face Recognition', frame)
