@@ -86,8 +86,10 @@ while True:
         bottom *=4
         left *=4
 
+        # Draw rectangle around detected faces
         cv.rectangle(frame,(left,top),(right,bottom),GREEN,thickness=RECTANGLE_THICKNESS)
         cv.rectangle(frame,(left,bottom),(right,bottom-35),GREEN,thickness=RECTANGLE_THICKNESS)
+        # Put name of the person found
         cv.putText(frame,name,(left + 6, bottom - 6),FONT,1.0,WHITE,2)
 
     # Show the current frame omn the display
