@@ -38,9 +38,6 @@ for person in os.listdir(PEOPLE_DIR):
         person = person.replace('.jpeg','')
         people_names.append(person)
 
-
-
-
 # While loop that continously shows the video from the webcam with face 
 # recogntion. Press q key to exit.
 while True:
