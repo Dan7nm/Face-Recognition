@@ -2,10 +2,11 @@
 import cv2 as cv
 import face_recognition as fc
 import os 
+import tkinter as tk
 
 # Colors
 GREEN = (0,255,0)
-BLUE = (0,0,255)
+RED = (0,0,255)
 BLUE = (255,0,0)
 WHITE = (255,255,255)
 
@@ -26,7 +27,7 @@ if not cap.isOpened():
 people_encodings = []
 people_names = []
 
-# Initilize all known people and their encodings
+# Initilize all people I want to recognize and their encodings
 for person in os.listdir(PEOPLE_DIR):
     if not person.startswith('.'):
         curr_img_path = os.path.join(PEOPLE_DIR,person)
@@ -37,11 +38,12 @@ for person in os.listdir(PEOPLE_DIR):
         person = person.replace('.jpeg','')
         people_names.append(person)
 
+
+
+
 # While loop that continously shows the video from the webcam with face 
 # recogntion. Press q key to exit.
 while True:
-
-    name = 'Unknown'
 
     # Read Frame by frame
     ret,frame = cap.read()
@@ -63,9 +65,13 @@ while True:
     # Frame encoding 
     frame_encodings = fc.face_encodings(rgb_frame,faces_location)
 
-    for frame_encoding in frame_encodings:
+    # check every face encoding the known people
+    for frame_encoding,(top,right,bottom,left) in zip(frame_encodings,faces_location):
 
-        # return a list of all mathces if the webcam recognizes a face from known people
+        # Initilize Unknown namm
+        name = 'Unknown'
+
+        # return a list of all matches if the webcam recognizes a face from known people
         list_of_matches = fc.compare_faces(people_encodings,frame_encoding)
 
         # length of matches
@@ -76,10 +82,6 @@ while True:
             if list_of_matches[i]:
                 name = people_names[i]
         
-        
-    # Draw a rectangle around the detected face
-    for (top,right,bottom,left) in faces_location:
-
         # Scale back positions
         top *=4
         right *=4
@@ -91,7 +93,7 @@ while True:
         cv.rectangle(frame,(left,bottom),(right,bottom-35),GREEN,thickness=RECTANGLE_THICKNESS)
         # Put name of the person found
         cv.putText(frame,name,(left + 6, bottom - 6),FONT,1.0,WHITE,2)
-
+    
     # Show the current frame omn the display
     cv.imshow('Face Recognition', frame)
 
